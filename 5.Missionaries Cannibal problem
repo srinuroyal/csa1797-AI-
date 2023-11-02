@@ -1,0 +1,56 @@
+from collections import deque
+
+def is_valid_state(state):
+    m_left, c_left, b_left, m_right, c_right = state
+    # Check if the number of cannibals does not exceed the number of missionaries
+    if (m_left < c_left and m_left > 0) or (m_right < c_right and m_right > 0):
+        return False
+    return True
+
+def is_goal_state(state):
+    return state == (0, 0, 0, 3, 3)
+
+def get_next_states(state):
+    m_left, c_left, b_left, m_right, c_right = state
+    possible_moves = []
+    
+    if b_left == 1:
+        for i in range(3):
+            for j in range(3):
+                if i + j >= 1 and i + j <= 2:
+                    new_state = (m_left - i, c_left - j, 0, m_right + i, c_right + j)
+                    if is_valid_state(new_state):
+                        possible_moves.append(new_state)
+    else:
+        new_state = (m_left, c_left, 1, m_right, c_right)
+        if is_valid_state(new_state):
+            possible_moves.append(new_state)
+    
+    return possible_moves
+
+def solve_missionaries_and_cannibals():
+    initial_state = (3, 3, 1, 0, 0)  # (m_left, c_left, b_left, m_right, c_right)
+    if not is_valid_state(initial_state):
+        print("Invalid initial state.")
+        return
+
+    visited_states = set()
+    queue = deque([(initial_state, [])])
+
+    while queue:
+        current_state, actions = queue.popleft()
+        if is_goal_state(current_state):
+            print("Solution found! Actions:")
+            for action in actions:
+                print(action)
+            return
+        visited_states.add(current_state)
+        next_states = get_next_states(current_state)
+        for state in next_states:
+            if state not in visited_states:
+                queue.append((state, actions + [state]))
+
+    print("No solution found.")
+
+if __name__ == "__main__":
+    solve_missionaries_and_cannibals()
