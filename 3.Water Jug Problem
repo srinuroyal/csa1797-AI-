@@ -1,0 +1,64 @@
+def water_jug_problem(capacity_jug1, capacity_jug2, target_volume):
+    visited_states = set()
+
+    def dfs(jug1, jug2):
+        if jug1 == target_volume or jug2 == target_volume:
+            return True
+
+        current_state = (jug1, jug2)
+
+        if current_state in visited_states:
+            return False
+
+        visited_states.add(current_state)
+
+        # Fill jug1
+        if jug1 < capacity_jug1:
+            if dfs(capacity_jug1, jug2):
+                print(f"Fill jug1 ({capacity_jug1}/{jug2})")
+                return True
+
+        # Fill jug2
+        if jug2 < capacity_jug2:
+            if dfs(jug1, capacity_jug2):
+                print(f"Fill jug2 ({jug1}/{capacity_jug2})")
+                return True
+
+        # Empty jug1
+        if jug1 > 0:
+            if dfs(0, jug2):
+                print(f"Empty jug1 (0/{jug2})")
+                return True
+
+        # Empty jug2
+        if jug2 > 0:
+            if dfs(jug1, 0):
+                print(f"Empty jug2 ({jug1}/0)")
+                return True
+
+        # Pour water from jug1 to jug2
+        if jug1 > 0 and jug2 < capacity_jug2:
+            transfer_amount = min(jug1, capacity_jug2 - jug2)
+            if dfs(jug1 - transfer_amount, jug2 + transfer_amount):
+                print(f"Pour from jug1 to jug2 ({jug1 - transfer_amount}/{jug2 + transfer_amount})")
+                return True
+
+        # Pour water from jug2 to jug1
+        if jug2 > 0 and jug1 < capacity_jug1:
+            transfer_amount = min(jug2, capacity_jug1 - jug1)
+            if dfs(jug1 + transfer_amount, jug2 - transfer_amount):
+                print(f"Pour from jug2 to jug1 ({jug1 + transfer_amount}/{jug2 - transfer_amount})")
+                return True
+
+        return False
+
+    if dfs(0, 0):
+        print("Solution found!")
+    else:
+        print("No solution exists.")
+
+if __name__ == "__main__":
+    jug1_capacity = 4  # Change these values as needed
+    jug2_capacity = 3
+    target_volume = 2
+    water_jug_problem(jug1_capacity, jug2_capacity, target_volume)
