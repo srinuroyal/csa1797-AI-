@@ -1,0 +1,40 @@
+import random
+
+# Define the 2x2 grid for the Vacuum Cleaner
+grid = [['Clean', 'Dirty'], ['Dirty', 'Clean']]
+
+# Define the vacuum cleaner agent
+class VacuumCleaner:
+    def __init__(self, location):
+        self.location = location
+
+    def clean(self):
+        if grid[self.location[0]][self.location[1]] == 'Dirty':
+            print(f"Cleaning the dirty cell at {self.location}")
+            grid[self.location[0]][self.location[1]] = 'Clean'
+    
+    def move(self):
+        if self.location[0] == 0:
+            if self.location[1] == 0:
+                self.location = (0, 1)
+            else:
+                self.location = (0, 0)
+        else:
+            if self.location[1] == 0:
+                self.location = (1, 1)
+            else:
+                self.location = (1, 0)
+        print(f"Moving to cell {self.location}")
+
+# Create a Vacuum Cleaner agent at a random location
+initial_location = (random.randint(0, 1), random.randint(0, 1))
+vacuum = VacuumCleaner(initial_location)
+
+# Simulate the cleaning process
+for _ in range(10):
+    vacuum.clean()
+    vacuum.move()
+
+print("Final grid state:")
+for row in grid:
+    print(row)
