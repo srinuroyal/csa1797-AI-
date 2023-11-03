@@ -1,0 +1,60 @@
+class CSP:
+    def __init__(self, variables, domains, constraints):
+        self.variables = variables
+        self.domains = domains
+        self.constraints = constraints
+
+    def is_consistent(self, assignment, var, value):
+        for constraint in self.constraints.get(var, []):
+            if not constraint(assignment, var, value):
+                return False
+        return True
+
+    def backtracking_search(self, assignment={}):
+        if len(assignment) == len(self.variables):
+            return assignment  # All variables are assigned
+
+        unassigned = [var for var in self.variables if var not in assignment]
+        var = unassigned[0]
+
+        for value in self.domains[var]:
+            if self.is_consistent(assignment, var, value):
+                assignment[var] = value
+                result = self.backtracking_search(assignment)
+                if result is not None:
+                    return result
+                del assignment[var]
+
+        return None
+
+def not_equal_constraint(assignment, var, value):
+    for neighbor, neighbor_value in assignment.items():
+        if neighbor in constraint_graph[var] and neighbor_value == value:
+            return False
+    return True
+
+# Define the map and constraints
+variables = ['WA', 'NT', 'SA', 'Q', 'NSW', 'V', 'T']
+domains = {var: ['R', 'G', 'B'] for var in variables}
+constraint_graph = {
+    'WA': ['NT', 'SA'],
+    'NT': ['WA', 'SA', 'Q'],
+    'SA': ['WA', 'NT', 'Q', 'NSW', 'V'],
+    'Q': ['NT', 'SA', 'NSW'],
+    'NSW': ['SA', 'Q', 'V'],
+    'V': ['SA', 'NSW'],
+    'T': []
+}
+constraints = {
+    'all_diff': not_equal_constraint
+}
+
+csp = CSP(variables, domains, constraints)
+solution = csp.backtracking_search()
+
+if solution is not None:
+    print("Solution:")
+    for var, value in solution.items():
+        print(f"{var}: {value}")
+else:
+    print("No solution found")
