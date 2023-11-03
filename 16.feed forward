@@ -1,0 +1,31 @@
+import tensorflow as tf
+from tensorflow import keras
+
+# Define the neural network architecture
+model = keras.Sequential([
+    keras.layers.Dense(units=64, activation='relu', input_shape=(input_size,)),
+    keras.layers.Dense(units=32, activation='relu'),
+    keras.layers.Dense(units=num_classes, activation='softmax')
+])
+
+# Compile the model
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+# Print the model summary
+model.summary()
+
+# Generate some example data
+# Replace this with your own data
+# X_train and y_train should be your training data
+# X_test and y_test should be your testing data
+X_train = ...
+y_train = ...
+X_test = ...
+y_test = ...
+
+# Train the model
+model.fit(X_train, y_train, epochs=10, batch_size=32, validation_data=(X_test, y_test))
+
+# Evaluate the model
+test_loss, test_acc = model.evaluate(X_test, y_test)
+print("Test accuracy:", test_acc)
