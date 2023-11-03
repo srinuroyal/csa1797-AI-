@@ -1,0 +1,41 @@
+import itertools
+
+def calculate_total_distance(path, cities):
+    total_distance = 0
+    for i in range(len(path) - 1):
+        city1 = path[i]
+        city2 = path[i + 1]
+        total_distance += cities[city1][city2]
+    return total_distance
+
+def traveling_salesman_bruteforce(cities):
+    num_cities = len(cities)
+    if num_cities < 2:
+        return []
+
+    city_indices = list(range(num_cities))
+    min_distance = float('inf')
+    best_path = []
+
+    for path_permutation in itertools.permutations(city_indices):
+        path = list(path_permutation)
+        path.append(path[0])  # Return to the starting city
+        total_distance = calculate_total_distance(path, cities)
+
+        if total_distance < min_distance:
+            min_distance = total_distance
+            best_path = path
+
+    return best_path, min_distance
+
+# Example usage:
+cities = [
+    [0, 29, 20, 21],
+    [29, 0, 15, 12],
+    [20, 15, 0, 17],
+    [21, 12, 17, 0]
+]
+
+best_path, min_distance = traveling_salesman_bruteforce(cities)
+print("Best TSP Path:", best_path)
+print("Minimum Distance:", min_distance)
