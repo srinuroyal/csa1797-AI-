@@ -1,0 +1,6 @@
+ancestor(X, Y) :- parent(X, Y).
+ancestor(X, Y) :- parent(X, Z), ancestor(y, z).
+
+parent(sai, ram).
+parent(ram, krishna).
+parent(ram, devi).
